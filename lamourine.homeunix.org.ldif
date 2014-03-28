@@ -1,0 +1,5 @@
+dn: dc=lamourine,dc=homeunix,dc=org
+objectClass: top
+objectClass: domain
+dc: lamourine
+description: Lamourine Family Network
