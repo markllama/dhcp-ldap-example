@@ -1,0 +1,76 @@
+Given a modern RPM based Linux distribution and OpenLDAP > v??
+
+Assumes systemd (systemctl), vary for upstart (service,chkconfig,/etc/init.d)
+ 
+Configuration by otc (online ?? configuration?)
+
+openldap-servers
+openldap-clients
+
+cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+systemctl 
+
+sudo systemctl start slapd
+
+sudo ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b cn=config dn
+
+sudo ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b cn=config olcDatabase=hdb
+
+slappasswd 
+{SSHA}3vzCpXUGXduJwII8gx0V/M2g/2jL2wq1
+
+--- config_customize_db.ldif
+dn: olcDatabase=hdb,cn=config
+relace: olcSuffix
+olcSuffix: dc=example,dc=com
+-
+replace: olcRootDN
+olcRootDN: cn=Manager,dc=example,dc=com
+-
+add: olcRootPW
+olcRootPW: {SSHA}3vzCpXUGXduJwII8gx0V/M2g/2jL2wq1
+
+sudo ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f config_customize_db.ldif
+
+sudo ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b cn=config olcDatabase=hdb
+
+convert_dhcp_schema.conf
+include /etc/openldap/schema/dhcp.schema
+
+mkdir -p ldif_output
+slapcat -f /vagrant/convert_dhcp_schema.conf -F ldif_output -n0 -H ldap:///cn={0}dhcp,cn=schema,cn=config -l dhcp.ldif
+sed -i -e '/CRC32/d ; s/{0}dhcp/dhcp/ ; /structuralObjectClass/,$d' dhcp.ldif  
+
+
+# add 
+sudo ldapadd -Q -Y EXTERNAL -H ldapi:/// -f cosine.ldif
+#sudo ldapadd -Q -Y EXTERNAL -H ldapi:/// -f nis.ldif
+#sudo ldapadd -Q -Y EXTERNAL -H ldapi:/// -f inetorgperson.ldif
+sudo ldapadd -Q -Y EXTERNAL -H ldapi:/// -f dhcp.ldif
+
+--- example.com.ldif
+dn: dc=example,dc=com
+objectClass: top
+objectClass: domain
+dc: example
+description: Example network to contain DHCP servers
+
+ldapadd -x -w oracle -D cn=Manager,dc=example,dc=com -H ldapi:/// -f /vagrant/example.com.ldif
+
+
+# add dhcp server host
+-- dhcp1.example.com
+dn: dc=dhcp1,dc=example,dc=com
+objectClass: dhcpServer
+dc: dhcp1
+description: The example DHCP server
+
+
+perl /usr/share/doc/dhcp/ldap/dhcpd-conf-to-ldap --conf example-dhcpd.conf --ldif example-dhcpd.ldif --basedn dc=example,dc=com  --server dhcpd --dhcpdn "cn=DHCP Config,dc=example,dc=com"
+
+Creating LDAP Configuration with the following options:
+	Base DN: dc=example,dc=com
+	DHCP DN: cn=DHCP Config2,dc=example,dc=com
+	Server DN: cn=dhcpd, dc=example,dc=com
+
+Done.
