@@ -41,6 +41,14 @@ mkdir -p ldif_output
 slapcat -f /vagrant/convert_dhcp_schema.conf -F ldif_output -n0 -H ldap:///cn={0}dhcp,cn=schema,cn=config -l dhcp.ldif
 sed -i -e '/CRC32/d ; s/{0}dhcp/dhcp/ ; /structuralObjectClass/,$d' dhcp.ldif  
 
+cat <<EOF > /tmp/slapd.conf-dhcp
+include /etc/openldap/schema/dhcp.schema
+EOF
+mkdir -p /tmp/ldif_output
+slapcat -f /tmp/slapd.conf-dhcp -F /tmp/ldif_output -n0 -H ldap:///cn={0}dhcp,cn=schema,cn=config | sed -e '/CRC32/d ; s/{0}dhcp/dhcp/ ; /structuralObjectClass/,$d' > /etc/openldap/schema/dhcp.ldif
+rm -rf /tmp/ldif_output
+rm /tmp/slapd.conf-dhcp
+
 
 # add 
 sudo ldapadd -Q -Y EXTERNAL -H ldapi:/// -f cosine.ldif
