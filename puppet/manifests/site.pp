@@ -80,8 +80,8 @@ file {'/etc/openldap/schema/dhcp.ldif':
 # Load Cosine schema
 #
 exec {'Load Cosine LDAP Schema':
-  command => '/usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif',
-  unless => '/usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q cosine,cn=schema',  
+  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif',
+  unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q cosine,cn=schema',  
   require => Package['openldap-servers']
 }
 
@@ -90,8 +90,8 @@ exec {'Load Cosine LDAP Schema':
 # Load DHCP schema
 #
 exec {'Load DHCP LDAP Schema':
-  command => '/usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif',
-  unless => "/usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b 'cn=schema,cn=config' dn | grep -q dhcp,cn=schema",
+  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif',
+  unless => "/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b 'cn=schema,cn=config' dn | grep -q dhcp,cn=schema",
   require => File['/etc/openldap/schema/dhcp.ldif']
 }
 
@@ -108,8 +108,8 @@ $openldap_rootpw = "{SSHA}B7aqK/ut35c/X9I7SJH8FwEUrQQmQO0d"
 # Create top object for the base DN (organization/domain?)
 #
 exec {'Set DB root information':
-  command => "/bin/true"
-  unless => "/bin/false"
+  command => "/bin/true",
+  unless => "/bin/false",
   require => Service['slapd']
 }
 
@@ -125,3 +125,9 @@ exec {'Set DB root information':
 #
 # Create a test host entry
 #
+
+
+class {'ldap::database':
+
+
+}
