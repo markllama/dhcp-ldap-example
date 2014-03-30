@@ -46,6 +46,14 @@ class ldap::database(
     dn => "olcDataBase=${::lapdb},cn=config"
   }
 
+  dbobject {"dc=example,dc=com":
+    objectclasses => ['dcObject', 'organization'],
+    attributes => {
+      'dc' => 'example',
+      'o' => 'Example Company',
+      'description' => 'a company that is just stuff'
+    }
+  }
 }
 
 define dbvalue(
@@ -68,4 +76,17 @@ EOF
     unless => "/usr/bin/sudo /usr/bin/ldapsearch -Q -Y EXTERNAL -H ldapi:/// -LLL -b cn=config olcDatabase=${::ldapdb} olcSuffix | grep $key | cut -d' ' -f2 | grep -q -e '^${value}\$'
 "
   }
+}
+
+define dbobject(
+  $objectclasses = [],
+  $attributes = {}
+) {
+  # ldapadd
+  # dn: $basedn
+  # objectClass: dcObject
+  # objectClass: organization
+  # dc: <domain>
+  # o: <organization>
+  # description: <string>
 }
