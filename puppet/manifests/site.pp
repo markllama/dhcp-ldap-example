@@ -107,11 +107,16 @@ $openldap_rootpw = "{SSHA}B7aqK/ut35c/X9I7SJH8FwEUrQQmQO0d"
 #
 # Create top object for the base DN (organization/domain?)
 #
-exec {'Set DB root information':
-  command => "/bin/true",
-  unless => "/bin/false",
-  require => Service['slapd']
+
+ldap::dbobject {'dc=example,dc=com':
+  objectclasses => ['dcObject', 'organization'],
+  attributes => {
+    'dc' => 'example',
+    'o' => 'Example Company Inc.',
+    'description' => 'an example company'
+  }
 }
+
 
 
 #
@@ -126,8 +131,3 @@ exec {'Set DB root information':
 # Create a test host entry
 #
 
-
-class {'ldap::database':
-
-
-}

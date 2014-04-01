@@ -56,7 +56,7 @@ class ldap::database(
   }
 }
 
-define dbvalue(
+define ldap::dbvalue(
   $dn
 ) {
   notify {"setting db value ${name} on ${dn}":}
@@ -78,15 +78,43 @@ EOF
   }
 }
 
-define dbobject(
+
+# echo <<EOF | sudo ldapadd -Q -Y EXTERNAL -H ldapi:///
+# dn: dc=example,dc=com
+# objectClass: dcObject
+# objectClass: organization
+# cn: example
+# o: Example Company Inc.
+# description: An example company
+#
+#
+# dbobject {"dc=example:dc=com":
+#   objectClasses => ['dcObject', 'organization'],
+#   attributes => {
+#     'cn' => 'example',
+#     'o' => 'Example Company Inc.',
+#     'description' => 'An Example Company'
+#   }
+#}
+
+
+
+
+define ldap::dbobject(
   $objectclasses = [],
   $attributes = {}
-) {
-  # ldapadd
-  # dn: $basedn
-  # objectClass: dcObject
-  # objectClass: organization
-  # dc: <domain>
-  # o: <organization>
-  # description: <string>
+){
+
+  $template = "dn: <%= @name %>
+<%= @objectclasses.map {|c| \"objectClass: #{c}\" }.join(\"\n\") %>
+<%= @attributes.map {|k,v| \"#{k}: #{v}\" }.join(\"\n\") %>
+"
+
+  $contents = inline_template($template)
+
+  exec {"add object ${name}":
+    command => "/usr/bin/echo \"${contents}\" | /usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:///",
+    unless => "/usr/bin/sudo /usr/bin/ldapsearch -Q -Y EXTERNAL -LLL -H ldapi:/// -b ${name} dn > /dev/null"
+  }
 }
+
