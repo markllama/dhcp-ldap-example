@@ -118,3 +118,19 @@ define ldap::dbobject(
   }
 }
 
+
+define ldap::dbvalues(
+  $attributes = {}
+){
+
+  $template = "dn: <%= @name %>
+changetype: modify
+<%= @attributes.map {|k,v| \"replace: #{k}\n#{k}: #{v}\n\" }.join(\"\n\") %>
+"
+
+  $contents = inline_template($template)
+
+  exec {"set object attributes on ${name}":
+    command => "/usr/bin/echo \"${contents}\" | /usr/bin/sudo /usr/bin/ldapmodify -Q -Y EXTERNAL -H ldapi:///"
+  }
+}
