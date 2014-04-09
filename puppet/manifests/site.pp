@@ -107,8 +107,8 @@ $openldap_rootpw = "{SSHA}B7aqK/ut35c/X9I7SJH8FwEUrQQmQO0d"
 ldap::dbvalues {'olcDatabase={2}hdb,cn=config':
   attributes => {
     'olcSuffix' => $openldap_basedn,
-#    'olcRootDN' => $openldap_rootdn,
-#    'olcRootPW' => $openldap_rootpw
+    'olcRootDN' => $openldap_rootdn,
+    'olcRootPW' => $openldap_rootpw
   }
 }
 

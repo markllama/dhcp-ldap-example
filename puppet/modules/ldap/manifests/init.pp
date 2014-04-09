@@ -125,7 +125,7 @@ define ldap::dbvalues(
 
   $template = "dn: <%= @name %>
 changetype: modify
-<%= @attributes.map {|k,v| \"replace: #{k}\n#{k}: #{v}\n\" }.join(\"\n\") %>
+<%= @attributes.map {|k,v| \"replace: #{k}\n#{k}: #{v}\n\" }.join(\"-\n\") %>
 "
 
   $contents = inline_template($template)
