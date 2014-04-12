@@ -99,7 +99,7 @@ exec {'Load DHCP LDAP Schema':
 # Set database base DN, root user, password
 #
 $openldap_basedn = "dc=example,dc=com"
-$openldap_rootdn = "cn=Manager,$basedn"
+$openldap_rootdn = "cn=Manager,$openldap_basedn"
 
 # changeme
 $openldap_rootpw = "{SSHA}B7aqK/ut35c/X9I7SJH8FwEUrQQmQO0d"
