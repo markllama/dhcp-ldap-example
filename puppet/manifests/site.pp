@@ -79,9 +79,21 @@ file {'/etc/openldap/schema/dhcp.ldif':
 #
 # Load Cosine schema
 #
+exec {'Load Core LDAP Schema':
+ command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/core.ldif',
+  unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q core,cn=schema',  
+  require => Package['openldap-servers']
+}
+
 exec {'Load Cosine LDAP Schema':
-  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif',
+ command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif',
   unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q cosine,cn=schema',  
+  require => Package['openldap-servers']
+}
+
+exec {'Load Inet Org Person LDAP Schema':
+ command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif',
+  unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q inetorgperson,cn=schema',  
   require => Package['openldap-servers']
 }
 
@@ -89,11 +101,11 @@ exec {'Load Cosine LDAP Schema':
 #
 # Load DHCP schema
 #
-exec {'Load DHCP LDAP Schema':
-  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif',
-  unless => "/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b 'cn=schema,cn=config' dn | grep -q dhcp,cn=schema",
-  require => File['/etc/openldap/schema/dhcp.ldif']
-}
+#exec {'Load DHCP LDAP Schema':
+#  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif',
+#  unless => "/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b 'cn=schema,cn=config' dn | grep -q dhcp,cn=schema",
+#  require => File['/etc/openldap/schema/dhcp.ldif']
+#}
 
 #
 # Set database base DN, root user, password
@@ -104,13 +116,13 @@ $openldap_rootdn = "cn=Manager,$openldap_basedn"
 # changeme
 $openldap_rootpw = "{SSHA}B7aqK/ut35c/X9I7SJH8FwEUrQQmQO0d"
 
-ldap::dbvalues {'olcDatabase={2}hdb,cn=config':
-  attributes => {
-    'olcSuffix' => $openldap_basedn,
-    'olcRootDN' => $openldap_rootdn,
-    'olcRootPW' => $openldap_rootpw
-  }
-}
+#ldap::dbvalues {'olcDatabase={2}hdb,cn=config':
+#  attributes => {
+#    'olcSuffix' => $openldap_basedn,
+#    'olcRootDN' => $openldap_rootdn,
+#    'olcRootPW' => $openldap_rootpw
+#  }
+#}
 
 #
 # Create top object for the base DN (organization/domain?)
