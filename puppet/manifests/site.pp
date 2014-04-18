@@ -116,26 +116,30 @@ $openldap_rootdn = "cn=Manager,$openldap_basedn"
 # changeme
 $openldap_rootpw = "{SSHA}B7aqK/ut35c/X9I7SJH8FwEUrQQmQO0d"
 
-#ldap::dbvalues {'olcDatabase={2}hdb,cn=config':
-#  attributes => {
-#    'olcSuffix' => $openldap_basedn,
-#    'olcRootDN' => $openldap_rootdn,
-#    'olcRootPW' => $openldap_rootpw
-#  }
-#}
+ldap::dbvalues {'olcDatabase={2}hdb,cn=config':
+  attributes => {
+    'olcSuffix' => $openldap_basedn,
+    'olcRootDN' => $openldap_rootdn,
+    'olcRootPW' => $openldap_rootpw
+  }
+}
 
 #
 # Create top object for the base DN (organization/domain?)
 #
-
-#ldap::dbobject {'dc=example,dc=com':
-#  objectclasses => ['dcObject', 'organization'],
-#  attributes => {
-#    'dc' => 'example',
-#    'o' => 'Example Company Inc.',
-#    'description' => 'an example company'
-#  }
-#}
+ldap::dbobject {'dc=example,dc=com':
+  access => {
+    'server' => '127.0.0.1',
+    'user' => $openldap_rootdn,
+    'password' => 'changeme'
+  },   
+  objectclasses => ['dcObject', 'organization'],
+  attributes => {
+    'dc' => 'example',
+    'o' => 'Example Company Inc.',
+    'description' => 'an example company'
+  }
+}
 
 
 

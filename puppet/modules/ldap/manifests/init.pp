@@ -101,6 +101,7 @@ EOF
 
 
 define ldap::dbobject(
+  $access = {},
   $objectclasses = [],
   $attributes = {}
 ){
@@ -113,8 +114,8 @@ define ldap::dbobject(
   $contents = inline_template($template)
 
   exec {"add object ${name}":
-    command => "/usr/bin/echo \"${contents}\" | /usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:///",
-    unless => "/usr/bin/sudo /usr/bin/ldapsearch -Q -Y EXTERNAL -LLL -H ldapi:/// -b ${name} dn > /dev/null"
+    command => "/usr/bin/echo \"${contents}\" | /usr/bin/sudo /usr/bin/ldapadd -x -w ${access['password']} -D ${access['user']} -H ldap://${access['server']}",
+    unless => "/usr/bin/sudo /usr/bin/ldapsearch -w ${access['password']} -D ${access['user']} -LLL -H ldap:// ${access['server']} -b ${name} dn > /dev/null"
   }
 }
 
