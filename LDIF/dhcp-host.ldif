@@ -1,0 +1,9 @@
+#
+# Define the DHCP host entry which will be used by the DHCP service on startup
+#  This is the configuration entry hook
+#
+dn: cn=dhcp-host,dc=example,dc=com
+cn: dhcp-host
+objectClass: top
+objectClass: dhcpServer
+dhcpServiceDN: cn=dhcp-service,dc=example,dc=com

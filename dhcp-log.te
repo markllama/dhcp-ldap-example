@@ -1,0 +1,11 @@
+
+module dhcp-log 1.0;
+
+require {
+	type var_log_t;
+	type dhcpd_t;
+	class file { write open };
+}
+
+#============= dhcpd_t ==============
+allow dhcpd_t var_log_t:file { write open };

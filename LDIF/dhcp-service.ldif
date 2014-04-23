@@ -1,0 +1,19 @@
+dn: cn=dhcp-service,dc=example,dc=com
+cn: dhcp-service
+objectClass: top
+objectClass: dhcpService
+objectClass: dhcpOptions
+dhcpPrimaryDN: cn=dhcp-host, dc=example,dc=com
+dhcpStatements: authoritative
+dhcpStatements: ddns-update-style none 
+dhcpStatements: max-lease-time 43200 
+dhcpStatements: default-lease-time 3600 
+dhcpStatements: allow booting 
+dhcpStatements: allow bootp 
+dhcpOption: domain-name "example.com" 
+dhcpOption: domain-name-servers 192.168.1.1, 192.168.1.2 
+dhcpOption: magic code 208 = string 
+dhcpOption: configfile code 209 = text 
+dhcpOption: pathprefix code 210 = text 
+dhcpOption: reboottime code 211 = unsigned integer 32 
+dhcpOption: magic f1:00:74:7e 

@@ -1,0 +1,6 @@
+dn: cn=10.0.2.0, cn=dhcp-service,dc=example,dc=com
+cn: 10.0.2.0
+objectClass: top
+objectClass: dhcpSubnet
+dhcpNetMask: 24
+dhcpOption: routers 10.0.2.2
