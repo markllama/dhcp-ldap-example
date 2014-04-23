@@ -91,6 +91,12 @@ exec {'Load Cosine LDAP Schema':
   require => Package['openldap-servers']
 }
 
+#exec {'Load NIS LDAP Schema':
+# command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif',
+#  unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q nis,cn=schema',  
+#  require => Package['openldap-servers']
+#}
+
 exec {'Load Inet Org Person LDAP Schema':
  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif',
   unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q inetorgperson,cn=schema',  
