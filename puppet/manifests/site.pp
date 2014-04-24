@@ -6,8 +6,8 @@ group { "puppet": ensure => "present" }
 
 package { "openldap-servers" : ensure => "present" }
 package { "openldap-clients" : ensure => "present" }
-#  package { "migrationtools" : ensure => "present" }
-package { 'dhcp': ensure => "present" }
+# package { "migrationtools" : ensure => "present" }
+# package { 'dhcp': ensure => "present" }
 
 #
 # Prepare for separate logging for LDAP service
@@ -55,13 +55,13 @@ service {'slapd':
 exec {'Load Core LDAP Schema':
  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/core.ldif',
   unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q core,cn=schema',  
-  require => Package['openldap-servers']
+  require => Service['slapd']
 }
 
 exec {'Load Cosine LDAP Schema':
  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif',
   unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q cosine,cn=schema',  
-  require => Package['openldap-servers']
+  require => Service['slapd']
 }
 
 #exec {'Load NIS LDAP Schema':
@@ -73,7 +73,7 @@ exec {'Load Cosine LDAP Schema':
 exec {'Load Inet Org Person LDAP Schema':
  command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif',
   unless => '/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b "cn=schema,cn=config" dn | grep -q inetorgperson,cn=schema',  
-  require => Package['openldap-servers']
+  require => Service['slapd']
 }
 
 
