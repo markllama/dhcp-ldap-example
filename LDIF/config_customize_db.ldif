@@ -1,9 +1,0 @@
-dn: olcDatabase={2}hdb,cn=config
-replace: olcSuffix
-olcSuffix: dc=example,dc=com
--
-replace: olcRootDN
-olcRootDN: cn=Manager,dc=example,dc=com
--
-add: olcRootPW
-olcRootPW: {SSHA}3vzCpXUGXduJwII8gx0V/M2g/2jL2wq1

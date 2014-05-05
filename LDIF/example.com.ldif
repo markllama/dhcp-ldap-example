@@ -1,5 +1,0 @@
-dn: dc=example,dc=com
-objectClass: top
-objectClass: domain
-dc: example
-description: Example network to contain DHCP services
