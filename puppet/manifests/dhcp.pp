@@ -11,14 +11,14 @@ service {dhcpd:
 
 }
 
-package {rsyslog:
-  ensure => present
-}
+#package {rsyslog:
+#  ensure => present
+#}
 
-service {rsyslog:
-  enable => true,
-  require => Package[rsyslog]
-}
+#service {rsyslog:
+#  enable => true,
+#  require => Package[rsyslog]
+#}
 
 file {'/var/log/dhcpd.log':
   ensure => present
@@ -84,5 +84,6 @@ file {'/etc/openldap/schema/dhcp.ldif':
 exec {'Load DHCP LDAP Schema':
   command => '/usr/bin/sudo /usr/bin/ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif',
   unless => "/usr/bin/sudo /usr/bin/ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b 'cn=schema,cn=config' dn | grep -q dhcp,cn=schema",
-  require => File['/etc/openldap/schema/dhcp.ldif']
+  require => [File['/etc/openldap/schema/dhcp.ldif'],
+	     Service['slapd']]
 }

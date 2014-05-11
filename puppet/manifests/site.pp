@@ -125,4 +125,4 @@ ldap::dbobject {'dc=example,dc=com':
 #
 # Create a test host entry
 #
-
+import 'dhcp.pp'

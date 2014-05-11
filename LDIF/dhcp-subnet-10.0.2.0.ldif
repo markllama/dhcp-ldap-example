@@ -4,4 +4,3 @@ objectClass: top
 objectClass: dhcpSubnet
 dhcpNetMask: 24
 dhcpOption: routers 10.0.2.2
-dhcpOption: domain-name-servers 10.0.2.3

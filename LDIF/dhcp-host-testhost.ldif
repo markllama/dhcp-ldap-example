@@ -4,5 +4,5 @@ objectClass: top
 objectClass: dhcpHost
 objectClass: dhcpOptions
 dhcpHWAddress: ethernet 0a:00:00:00:00:01
-dhcpStatements: fixed-address 10.0.2.129
+dhcpStatements: fixed-address 10.0.2.16
 dhcpOption: host-name "testhost"

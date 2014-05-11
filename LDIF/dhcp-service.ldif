@@ -11,7 +11,7 @@ dhcpStatements: default-lease-time 3600
 dhcpStatements: allow booting 
 dhcpStatements: allow bootp 
 dhcpOption: domain-name "example.com" 
-dhcpOption: domain-name-servers 192.168.1.1, 192.168.1.2 
+dhcpOption: domain-name-servers 10.0.2.3
 dhcpOption: magic code 208 = string 
 dhcpOption: configfile code 209 = text 
 dhcpOption: pathprefix code 210 = text 
